@@ -1,6 +1,8 @@
 services:
   api:
     build: .
+    env_file:
+      - .env
     container_name: bulletingboard-api
     ports:
       - "3000:3000"
