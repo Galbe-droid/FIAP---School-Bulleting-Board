@@ -17,7 +17,7 @@ jobs:
     runs-on: ubuntu-latest
 
     env:
-      DATABASE_URL: "file:./prisma/dev.db"
+      DATABASE_URL: ${{ secrets.DATABASE_URL }}
 
     steps:
 
@@ -39,7 +39,9 @@ jobs:
         run: npx prisma db push
 
       - name: Build Docker Image
-        run: docker build -t bulletingboard-api .
+        run: docker build -t bulletingboard-api . | docker build \
+            --build-arg DATABASE_URL="${{ secrets.DATABASE_URL }}" \
+            -t bulletingboard-api .
   
       - name: Executar testes
         run: npm test
