@@ -11,8 +11,6 @@ COPY . .
 ARG DATABASE_URL
 ENV DATABASE_URL=$DATABASE_URL
 
-RUN npx prisma generate
-
 EXPOSE 3000
 
-CMD ["npm", "run", "dev"]
+CMD ["sh", "-c", "npx prisma generate && npm run dev"]

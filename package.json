@@ -5,7 +5,7 @@
   "main": "index.js",
   "scripts": {
     "test": "jest",
-    "dev": "prisma generate && ts-node-dev --respawn src/server.ts",
+    "dev": "npx prisma generate && ts-node-dev src/server.ts",
     "build": "docker build -t bulletingboard-api ."
   },
   "keywords": [],
