@@ -1,0 +1,21 @@
+services:
+
+  backend:
+    build:
+      context: schoolbulletingboard-api
+    container_name: schoolbulletingboard-api
+    ports:
+      - "3000:3000"
+    env_file:
+      - ./schoolbulletingboard-api/.env
+
+  frontend:
+    build:
+      context: schoolbulletingboard-web
+      args:
+        VITE_API_URL: http://localhost:3000
+    container_name: schoolbulletingboard-web
+    ports:
+      - "5173:80"
+    depends_on:
+      - backend

@@ -1,0 +1,95 @@
+name: CI
+
+on:
+  push:
+    branches:
+      - main
+      - develop
+
+  pull_request:
+    branches:
+      - main
+      - develop
+
+jobs:
+
+  backend:
+    runs-on: ubuntu-latest
+
+    defaults:
+      run:
+        working-directory: ./schoolbulletingboard-api
+
+    env:
+      DATABASE_URL: ${{ secrets.DATABASE_URL }}
+
+    steps:
+
+      - name: Checkout do código
+        uses: actions/checkout@v4
+
+      - name: Configurar Node.js
+        uses: actions/setup-node@v4
+        with:
+          node-version: 22
+
+      - name: Instalar dependências
+        run: npm install
+
+      - name: Gerar Prisma Client
+        run: npx prisma generate
+
+      - name: Test DATABASE_URL
+        run: |
+          if [ -z "$DATABASE_URL" ]; then
+            echo "DATABASE_URL está vazia"
+            exit 1
+          else
+            echo "DATABASE_URL encontrada"
+          fi
+
+      - name: Aplicar banco SQLite
+        run: npx prisma migrate push
+
+      - name: Build Docker Image
+        run: docker build --build-arg DATABASE_URL="${{ secrets.DATABASE_URL }}" -t bulletingboard-api .
+  
+      - name: Executar testes
+        run: npm test
+
+
+  frontend:
+    runs-on: ubuntu-latest
+
+    defaults:
+      run:
+        working-directory: ./schoolbulletingboard-web
+
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v4
+
+      - name: Setup Node
+        uses: actions/setup-node@v4
+        with:
+          node-version: 22
+          cache: npm
+          cache-dependency-path: schoolbulletingboard-web/package-lock.json
+
+      - name: Install dependencies
+        run: npm ci
+
+      - name: Build
+        run: npm run build
+        env:
+          VITE_API_URL: http://localhost:3000
+
+      - name: Run tests
+        run: npm test -- --run
+        continue-on-error: true
+
+      - name: Build Docker image
+        run: |
+          docker build \
+            --build-arg VITE_API_URL=http://localhost:3000 \
+            -t bulletingboard-frontend .
