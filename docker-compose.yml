@@ -2,7 +2,7 @@ services:
 
   backend:
     build:
-      context: schoolbulletingboard-api
+      context: schoolbulletingboard - api
     container_name: schoolbulletingboard-api
     ports:
       - "3000:3000"
