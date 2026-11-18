@@ -4,7 +4,7 @@ import { AuthRequest } from '../types/AuthRequest';
 import {UserRole} from '@prisma/client';
 
 class PostController {
-    async index(req: Request, res: Response) {
+    async index(req: AuthRequest, res: Response) {
         const role = req.query.role as string;
 
         if (role === UserRole.TEACHER) {
@@ -17,7 +17,7 @@ class PostController {
     }
 
 
-    async postId(req: Request, res: Response) {
+    async postId(req: AuthRequest, res: Response) {
         const postId = parseInt(String(req.params.id), 10);
         const post = await PostService.getPostById(postId);
 
@@ -52,9 +52,10 @@ class PostController {
         return res.json(updatedPost);
     }
 
-    async delete(req: Request, res: Response) {
+    async delete(req: AuthRequest, res: Response) {
         const postId = parseInt(String(req.params.id), 10);
-        const deletedPost = await PostService.deletePost(postId);
+        const userId = req.user!.userId;
+        const deletedPost = await PostService.deletePost(postId, userId);
 
         if(!deletedPost) {
             return res.status(404).json({ message: 'Post not found' });

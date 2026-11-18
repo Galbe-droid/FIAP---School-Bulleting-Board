@@ -6,9 +6,9 @@ class AuthController {
         try{
             const { email, password } = req.body;
             if (!email || !password) {
-                res.status(400).send({
+                return res.status(400).send({
                     error: "email and password",
-                })
+                });
             }
             const result = await AuthService.login(email, password);
             return res.status(200).send(result);

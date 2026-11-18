@@ -92,4 +92,4 @@ jobs:
         run: |
           docker build \
             --build-arg VITE_API_URL=http://localhost:3000 \
-            -t bulletingboard-frontend .
+            -t schoolbulletingboard-web .

@@ -5,6 +5,38 @@ import CreateUserDto from "../dtos/User/CreateUserDto";
 const prisma = new PrismaClient();
 
 class UserRepository {
+    async getAllUsersStudents(){
+        return prisma.user.findMany({
+            where: {
+                role: 'STUDENT'
+            },
+            select: {
+                id: true,
+                username: true,
+                email: true
+            },
+            orderBy: {
+                username: 'asc'
+            }
+        })
+    }
+
+    async getAllUsersProfessors(){
+        return prisma.user.findMany({
+            where: {
+                role: 'TEACHER'
+            },
+            select: {
+                id: true,
+                username: true,
+                email: true
+            },
+            orderBy: {
+                username: 'asc'
+            }
+        })
+    }
+
     async create(user: CreateUserDto) {
         return prisma.user.create({
             data: {
@@ -26,6 +58,14 @@ class UserRepository {
 
     async findById(id: number) {
         return prisma.user.findUnique({
+            where: {
+                id: id
+            }
+        })
+    }
+
+    async deleteUser(id: number){
+        return prisma.user.delete({
             where: {
                 id: id
             }

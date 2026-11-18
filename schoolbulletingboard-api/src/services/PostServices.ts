@@ -91,6 +91,10 @@ class PostService {
             return null;
         }
 
+        if (existingPost.authorId !== userId) {
+            throw new Error("You cannot edit this post");
+        }
+
         existingPost.updatedAt = new Date();
 
         const updatedPost: Post = {
@@ -102,7 +106,17 @@ class PostService {
         return await PostRepository.update(id, updatedPost);
     }
 
-    async deletePost(id: number): Promise<boolean> {
+    async deletePost(id: number, userId: number): Promise<boolean> {
+        const existingPost = await PostRepository.findById(id);
+
+        if (!existingPost) {
+            throw new Error("Post not found");
+        }
+
+        if (existingPost.authorId !== userId) {
+            throw new Error("You cannot delete this post");
+        }
+
         await PostRepository.delete(id);
         return true;
     }
