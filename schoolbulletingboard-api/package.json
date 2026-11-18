@@ -5,8 +5,9 @@
   "main": "index.js",
   "scripts": {
     "test": "jest",
-    "dev": "nodemon -L --watch src --ext ts --exec ts-node src/server.ts",
-    "build": "docker build -t bulletingboard-api ."
+    "dev": "npx prisma generate && ts-node-dev --respawn --transpile-only src/server.ts",
+    "build": "npx prisma generate && tsc",
+    "start": "node dist/server.js"
   },
   "keywords": [],
   "author": "",
