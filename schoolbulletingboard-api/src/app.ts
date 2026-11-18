@@ -7,7 +7,7 @@ import userRoutes from "./routes/user.routes";
 const app = express();
 
 app.use(cors({
-    origin: ["http://localhost:5173", "http://localhost:5174"],
+    origin: ["https://fiap-school-bulleting-board.vercel.app", "https://fiap-school-bulleting-board-mobile.vercel.app"],
 }))
 
 app.use(express.json());
