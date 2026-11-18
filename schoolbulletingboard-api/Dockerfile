@@ -8,9 +8,8 @@ RUN npm install
 
 COPY . .
 
-ARG DATABASE_URL
-ENV DATABASE_URL=$DATABASE_URL
+RUN npx prisma generate && npx tsc
 
 EXPOSE 3000
 
-CMD ["sh", "-c", "npx prisma generate && npm run dev"]
+CMD ["npm", "start"]
